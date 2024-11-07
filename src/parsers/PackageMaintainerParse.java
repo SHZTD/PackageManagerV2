@@ -42,20 +42,24 @@ public class PackageMaintainerParse {
             throw new RuntimeException(ex);
         }
 
-        for (String pkg : packages) {
-            for (String line : fileLines) {
-                String[] parts = line.split(";");
-                if (parts.length == 3) {
-                    String packageName = parts[0];
-                    String maintainerName = parts[1];
-                    String maintainerEmail = parts[2];
+        try {
+            for (String pkg : packages) {
+                for (String line : fileLines) {
+                    String[] parts = line.split(";");
+                    if (parts.length == 3) {
+                        String packageName = parts[0];
+                        String maintainerName = parts[1];
+                        String maintainerEmail = parts[2];
 
-                    if (pkg.equals(packageName)) {
-                        mantainer.add(maintainerName);
-                        mantainerEmail.add(maintainerEmail);
+                        if (pkg.equals(packageName)) {
+                            mantainer.add(maintainerName);
+                            mantainerEmail.add(maintainerEmail);
+                        }
                     }
                 }
             }
+        } catch (NullPointerException e) {
+            System.out.println("No se encontro el bug, no hay packages que procesar");
         }
     }
 }

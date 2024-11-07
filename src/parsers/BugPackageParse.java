@@ -28,6 +28,7 @@ public class BugPackageParse {
             }
 
             // BUG_ID;PACKAGE_NAME
+            boolean foundBug = false;
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
                 String[] parts = line.split(";");
@@ -35,7 +36,7 @@ public class BugPackageParse {
                     int theBugId = Integer.parseInt(parts[0].trim());
                     if (theBugId == bugID) {
                         // debug
-                        System.out.println("Se han populado los datos del array");
+                        //System.out.println("Se han populado los datos del array");
                         String[] packages = parts[1].split(",");
                         packageNames = new String[packages.length];
                         for (int i = 0; i < packages.length; i++) {
@@ -44,9 +45,14 @@ public class BugPackageParse {
                             System.out.println(packageNames[i]);
                         }
                         sc.close();
+                        foundBug = true;
                         break;
                     }
                 }
+            }
+            if (!foundBug) {
+                EmailComposer c = new EmailComposer();
+                c.composeEmail("Error: El bugID no existeix");
             }
         } catch (FileNotFoundException e) {
             System.out.println("Error: El archivo no existe o no se encuentra");
