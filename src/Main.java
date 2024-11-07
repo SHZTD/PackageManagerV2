@@ -23,6 +23,7 @@ public class Main {
             e.printStackTrace();
         }
 
+        System.out.println("[+] Bug encontrado.");
         // instancia la clase con el valor del bug
         BugPackageParse bpp = new BugPackageParse(bugID);
         bpp.readAndFindLine(); // busca el valor
@@ -30,6 +31,7 @@ public class Main {
         // una vez buscado, se toman los datos de el array
         String[] packageList = bpp.getPackageNames(); // ahora packageList tiene todos los packages
 
+        System.out.println("[/] Listando responsables y componiendo correo.");
         // encontrar a los responsables
         PackageMaintainerParse pkgMantainerP = new PackageMaintainerParse(packageList); // instancia con los paquetes
         pkgMantainerP.findPackageMantainer(); // empieza a buscar los responsables
@@ -43,31 +45,31 @@ public class Main {
         if (packageList.length > 1) {
             for (int i = 0; i < packageList.length; i++) {
                 if(!email.get(i).contains("@")) {
-                    String err = "Error, the package + " + packageList[i] + " with bugID: " + bugID + " does not have an email.";
+                    String err = "Error, el package + " + packageList[i] + " con bugID: " + bugID + " no tiene email activo.";
                     emailComposer.composeEmail(err);
                 } else {
                     String e = "From: owner@bugs.debian.org\n" +
                             "To: " + email.get(i) +
                             "\nDear " + maintainers.get(i) +
                             "\nYou have a new bug: " +
-                            packageList[i] + "- RC bug number #" + bugID +
+                            packageList[i] + " - RC bug number #" + bugID +
                             "\nPlease, fix it asap.\nCheers.";
-                    emailComposer.composeEmail(e);
+                    System.out.println("[+] Correo escrito.");
                     System.out.println(e);
                 }
             }
         } else {
-            if(!email.get(1).contains("@")) {
-                String err = "Error, the package + " + packageList[0] + " with bugID: " + bugID + " does not have an email.";
+            if(!email.getFirst().contains("@")) {
+                String err = "Error, el package + " + packageList[0] + " con bugID: " + bugID + " no tiene email activo.";
                 emailComposer.composeEmail(err);
             } else {
                 String e = "From: owner@bugs.debian.org\n" +
-                        "To: " + email.get(1) +
-                        "\nDear " + maintainers.get(1) +
+                        "To: " + email.getFirst() +
+                        "\nDear " + maintainers.getFirst() +
                         "\nYou have a new bug: " +
-                        packageList[0] + "- RC bug number #" + bugID +
+                        packageList[0] + " - RC bug number #" + bugID +
                         "\nPlease, fix it asap.\nCheers.";
-                System.out.println(e);
+                System.out.println("[+] Correo escrito.");
                 emailComposer.composeEmail(e);
             }
         }

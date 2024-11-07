@@ -42,7 +42,7 @@ public class BugPackageParse {
                         for (int i = 0; i < packages.length; i++) {
                             // popula el array de strings
                             packageNames[i] = packages[i].trim();
-                            System.out.println(packageNames[i]);
+                            //System.out.println(packageNames[i]);
                         }
                         sc.close();
                         foundBug = true;
