@@ -1,4 +1,5 @@
 import parsers.BugPackageParse;
+import parsers.EmailComposer;
 import parsers.PackageMaintainerParse;
 
 import java.util.ArrayList;
@@ -28,23 +29,37 @@ public class Main {
 
         // una vez buscado, se toman los datos de el array
         String[] packageList = bpp.getPackageNames(); // ahora packageList tiene todos los packages
-        // si es que hay mas de un package, encontrar estos responsables
-        PackageMaintainerParse pkgMantainerP = new PackageMaintainerParse(packageList);
-        pkgMantainerP.findPackageMantainer();
+
+        // encontrar a los responsables
+        PackageMaintainerParse pkgMantainerP = new PackageMaintainerParse(packageList); // instancia con los paquetes
+        pkgMantainerP.findPackageMantainer(); // empieza a buscar los responsables
+
+        // almacenar los emails y el gestor
         ArrayList<String> maintainers = pkgMantainerP.getMantainer();
         ArrayList<String> email = pkgMantainerP.getMantainerEmail();
-        // TODO: MOSTRAR AQUI LOS EMAILS I LOS NOMBRES DE MANTENIMIENTO
-        System.out.println("Emails y Mantenedores:");
-        for (int i = 0; i < maintainers.size(); i++) {
-            System.out.println("Maintainer: " + maintainers.get(i) + ", Email: " + email.get(i));
+
+        // escribimos el email
+        EmailComposer emailComposer = new EmailComposer();
+        if (packageList.length > 1) {
+            for (int i = 0; i < packageList.length; i++) {
+                String e = "From: owner@bugs.debian.org\n" +
+                        "To: " + email.get(i) +
+                        "\nDear " + maintainers.get(i) +
+                        "\nYou have a new bug: " +
+                        packageList[i] + "- RC bug number #" + bugID +
+                        "\nPlease, fix it asap.\nCheers.";
+                emailComposer.composeEmail(e);
+                System.out.println(e);
+            }
+        } else {
+            String e = "From: owner@bugs.debian.org\n" +
+                    "To: " + email.get(1) +
+                    "\nDear " + maintainers.get(1) +
+                    "\nYou have a new bug: " +
+                    packageList[0] + "- RC bug number #" + bugID +
+                    "\nPlease, fix it asap.\nCheers.";
+            System.out.println(e);
+            emailComposer.composeEmail(e);
         }
     }
 }
-
-/*
-Debugar el array de strings
-
-    for (int i = 0; i < packageList.length; i++) {
-        System.out.println(packageList[i]);
-    }
-*/
